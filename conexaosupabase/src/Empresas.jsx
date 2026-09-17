@@ -3,33 +3,39 @@ import { supabase } from "./supabase";
 
 function Empresas() {
 
-    const[empresa,alteraEmpresas] = useState([])
-    const[funcionarios,alteraFuncionarios] = useState([])
+    const [empresa, alteraEmpresas] = useState([])
+    const [funcionarios, alteraFuncionarios] = useState([])
 
-    async function captarEmpresas(){
+    async function captarEmpresas() {
 
-        const{error, data}= await supabase.from("empresas").select()
+        const { error, data } = await supabase.from("empresas").select()
         console.log(data)
         alteraEmpresas(data)
     }
-    async function captarFuncionarios(){
+    async function captarFuncionarios() {
 
-        const{error, data}= await supabase.from("funcionario").select()
+        const { error, data } = await supabase.from("funcionario").select(
+           `id,
+            nome,
+            cargo,
+            contato,
+            empresas ( nome )`)
+
         console.log(data)
         alteraFuncionarios(data)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         captarEmpresas()
         captarFuncionarios()
-    },[])
-    return (  
+    }, [])
+    return (
         <div>
 
             <h1>Empresas</h1>
             <p>Consulta na tabela empresas e fncionarios </p>
 
-            <table border = "true">
+            <table border="true">
 
                 <tr>
                     <td>ID</td>
@@ -38,49 +44,49 @@ function Empresas() {
                     <td>ENDEREÇO</td>
                 </tr>
                 {
-                    empresa.map(i=>
-                        
+                    empresa.map(i =>
+
                         <tr>
                             <td> {i.id}</td>
                             <td> {i.nome}</td>
                             <td> {i.cnpj}</td>
                             <td> {i.endereco}</td>
                         </tr>
-                    
+
                     )
                 }
-               
+
             </table>
 
             <br />            <br />            <br />            <br />            <br />            <br />
-            <table border = "true">
-            
+
+            <table border="true">
+
                 <tr>
                     <td>ID</td>
-                    <td>NOME </td>
                     <td>NOME DA EMPRESA </td>
-                    <td>ENDEREÇO DA EMPRESA</td>
+                    <td>NOME </td>
                     <td>CARGO</td>
                     <td>CONTATO</td>
 
-                </tr>  
+                </tr>
                 {
-                    funcionarios.map(i=>
-                        
+                    funcionarios.map(i =>
+
                         <tr>
                             <td> {i.id}</td>
+                            <td> {i.empresas.nome}</td>
                             <td> {i.nome}</td>
-                              <td> {i.nome}</td>
-                            <td> {i.cnpj}</td>
-                            <td> {i.endereco}</td>
+                            <td> {i.cargo == 0 ? "Admin" : "funcionario"}</td>
+                            <td> {i.contato}</td>
                         </tr>
-                    
+
                     )
-                }  
+                }
 
             </table>
         </div>
-            
+
     );
 }
 
