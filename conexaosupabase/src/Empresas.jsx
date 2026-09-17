@@ -15,11 +15,9 @@ function Empresas() {
     async function captarFuncionarios() {
 
         const { error, data } = await supabase.from("funcionario").select(
-           `id,
-            nome,
-            cargo,
-            contato,
-            empresas ( nome )`)
+           `*,
+            
+            empresas ( nome, endereco )`)
 
         console.log(data)
         alteraFuncionarios(data)
@@ -66,6 +64,7 @@ function Empresas() {
                     <td>ID</td>
                     <td>NOME DA EMPRESA </td>
                     <td>NOME </td>
+                    <td>ENDERECO </td>
                     <td>CARGO</td>
                     <td>CONTATO</td>
 
@@ -77,6 +76,7 @@ function Empresas() {
                             <td> {i.id}</td>
                             <td> {i.empresas.nome}</td>
                             <td> {i.nome}</td>
+                            <td> {i.empresas.endereco}</td>
                             <td> {i.cargo == 0 ? "Admin" : "funcionario"}</td>
                             <td> {i.contato}</td>
                         </tr>
