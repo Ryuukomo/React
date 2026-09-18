@@ -10,11 +10,40 @@ function Empresas() {
     const [exibeEmpresas, alteraExibeEmpresas] = useState(true)
     const [exibeModal, alteraExibeModal] = useState(false)
 
+    const[nome,alteraNome] = useState("")
+    const[id_empresa,alteraIdEmpresa] = useState(1)
+    const[contato,alteraContato] = useState("")
+    const[cargo,alteraCargo] = useState(1)
 
+    async function inserirFuncionario(){
+        const obj= {
+            nome:nome,
+            id_empresa: parseInt(id_empresa),
+            contato: contato,
+            cargo: parseFloat(cargo)
+        }
+
+         const { error } = await supabase.from("funcionario").insert(obj)
+
+         if (error == null){
+            alteraExibeModal(false)
+            buscaUsuariosPorEmpresa(id_empresa)
+            alert("Funcionário cadastrado")
+
+         }else {
+
+            alert("Erro ao cadastrar funcionário. Entre em contato com o suporte técnico")
+            console.log(error)
+         }
+
+
+         
+      
+    }
     async function captarEmpresas() {
 
         const { error, data } = await supabase.from("empresas").select()
-        console.log(data)
+        // console.log(data)
         alteraEmpresas(data)
     }
     async function captarFuncionarios() {
@@ -24,15 +53,16 @@ function Empresas() {
             
             empresas ( nome, endereco )`)
 
-        console.log(data)
+        // console.log(data)
         alteraFuncionarios(data)
     }
     async function buscaUsuariosPorEmpresa(id_empresa) {
         const { error, data } = await supabase.from("funcionario").select("*,empresas(*)").eq("id_empresa", id_empresa)
 
-        console.log(data)
+        // console.log(data)
+        alteraIdEmpresa(id_empresa)
         alteraFuncionarios(data)
-        alteraVisualizacao()
+      
 
     }
 
@@ -66,10 +96,10 @@ function Empresas() {
                         <div onClick={()=> alteraExibeModal(false)} className="fundoPreto"></div>
                         <div className="modal">
                             <h2>Novo Funcionarios</h2>
-                            <input placeholder="Nome" />
-                            <input placeholder="Contato" />
+                            <input onChange={ e => alteraNome(e.target.value)} placeholder="Nome" />
+                            <input onChange={ e => alteraContato(e.target.value)} placeholder="Contato" />
                             <br />
-                            <select>
+                            <select onChange={ e => alteraCargo(e.target.value)}>
 
                                 <option value="1"> Funcionario</option>
                                 <option value="0">Admin</option>
@@ -77,7 +107,7 @@ function Empresas() {
                                
                             </select>
                             <br />
-                            <button>Salvar</button>
+                            <button onClick={inserirFuncionario}>Salvar</button>
 
 
                         </div>
@@ -111,7 +141,7 @@ function Empresas() {
                                         <td> {i.nome}</td>
                                         <td> {i.cnpj}</td>
                                         <td> {i.endereco}</td>
-                                        <td><button onClick={() => buscaUsuariosPorEmpresa(i.id)}>Ver funcionários</button></td>
+                                        <td><button onClick={() => {buscaUsuariosPorEmpresa(i.id); alteraVisualizacao()}}>Ver funcionários</button></td>
                                     </tr>
 
                                 )
@@ -135,7 +165,7 @@ function Empresas() {
 
                         <h2>Funcionários</h2>
 
-                        <button onClick={alteraVisualizacao}>Voltar</button>
+                        <button onClick={() => {alteraVisualizacao();  alteraIdEmpresa("")} }>Voltar</button>
                         <button onClick={()=> alteraExibeModal(true)}>Adicionar Novo</button>
 
                         <table border="true">
