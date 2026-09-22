@@ -1,0 +1,13 @@
+.produto{
+    text-align:center;
+    width: 150px;
+    padding: 20px;
+    background-color: azure;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.produto h2{
+    margin: 0;
+    font-size: 15px;
+}
