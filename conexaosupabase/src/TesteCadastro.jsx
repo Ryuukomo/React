@@ -28,6 +28,7 @@ function TesteCadastro() {
 
 
             alteraExibeCadastro(false)
+            captarUser()
             alert("Funcionário cadastrado")
 
          }else {
@@ -43,7 +44,7 @@ function TesteCadastro() {
     
     async function captarUser() {
 
-        const { error, data } = await supabase.from("users").select()
+        const { error, data } = await supabase.from("users").select(`*`)
 
         // console.log(data)
         alteraUser(data)

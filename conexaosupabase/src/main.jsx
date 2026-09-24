@@ -7,8 +7,8 @@ import TesteCadastro from './TesteCadastro.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     {/* <App /> */}
-    <Empresas />
+    {/* <Empresas /> */}
 
-    {/* <TesteCadastro/> */}
+    <TesteCadastro/>
   </StrictMode>,
 )
